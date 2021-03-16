@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+/node_modules/
+*.log
+package-lock.json
+/gradle/wrapper/

@@ -10,13 +10,13 @@ import java.util.Objects;
 public class Entry {
 
     private @Id @GeneratedValue Long id;
-    private String code;
+    private String entryCode;
     private LocalDateTime localDateTime;
 
     public Entry() { }
 
-    public Entry(String code) {
-        this.code = code;
+    public Entry(String entryCode) {
+        this.entryCode = entryCode;
         this.localDateTime = LocalDateTime.now();
     }
 
@@ -26,13 +26,13 @@ public class Entry {
         if (o == null || getClass() != o.getClass()) return false;
         Entry entry = (Entry) o;
         return id.equals(entry.id) &&
-                code.equals(entry.code) &&
+                entryCode.equals(entry.entryCode) &&
                 localDateTime.equals(entry.localDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, localDateTime);
+        return Objects.hash(id, entryCode, localDateTime);
     }
 
     public Long getId() {
@@ -43,12 +43,12 @@ public class Entry {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getEntryCode() {
+        return entryCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setEntryCode(String code) {
+        this.entryCode = code;
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -63,7 +63,7 @@ public class Entry {
     public String toString() {
         return "Entry{" +
                 "id=" + id +
-                ", code='" + code + '\'' +
+                ", code='" + entryCode + '\'' +
                 ", localDateTime=" + localDateTime +
                 '}';
     }
