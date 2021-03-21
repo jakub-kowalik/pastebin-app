@@ -1,15 +1,17 @@
-package pl.jakubkowalik.springpastebin;
+package pl.jakubkowalik.springpastebin.entry;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Entry {
 
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue UUID id;
     private String entryCode;
     private LocalDateTime localDateTime;
 
@@ -17,7 +19,7 @@ public class Entry {
 
     public Entry(String entryCode) {
         this.entryCode = entryCode;
-        this.localDateTime = LocalDateTime.now();
+        setDate();
     }
 
     @Override
@@ -35,11 +37,11 @@ public class Entry {
         return Objects.hash(id, entryCode, localDateTime);
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -66,5 +68,10 @@ public class Entry {
                 ", code='" + entryCode + '\'' +
                 ", localDateTime=" + localDateTime +
                 '}';
+    }
+
+    @PrePersist
+    void setDate() {
+        this.localDateTime = LocalDateTime.now();
     }
 }

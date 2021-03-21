@@ -32,10 +32,6 @@ class EntriesList extends React.Component{
         return (
             <table>
                 <tbody>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                </tr>
                 {entries}
                 </tbody>
             </table>
@@ -46,10 +42,15 @@ class EntriesList extends React.Component{
 class Entry extends React.Component{
     render() {
         return (
+            <div>
             <tr>
                 <td>{this.props.entry.localDateTime}</td>
+
+            </tr>
+            <tr>
                 <td>{this.props.entry.entryCode}</td>
             </tr>
+            </div>
         )
     }
 }
