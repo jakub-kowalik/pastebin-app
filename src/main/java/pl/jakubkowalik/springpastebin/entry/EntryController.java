@@ -1,28 +1,53 @@
 package pl.jakubkowalik.springpastebin.entry;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/entries")
 public class EntryController {
 
-    @Autowired
-    private EntryService entryService;
+    private final EntryService entryService;
 
-    @RequestMapping("/entries")
-    public List<Entry> getEntries() {
+    public EntryController(EntryService entryService) {
+        this.entryService = entryService;
+    }
+
+    @GetMapping()
+    public List<Entry> getAllEntries() {
         return entryService.getAllEntries();
     }
 
-    @GetMapping("/entries/{id}")
-    public Entry getEntry(@PathVariable String id) {
+    @GetMapping("{id}")
+    public Optional<Entry> getEntry(@PathVariable String id) {
         return entryService.getEntry(id);
     }
 
-    @PostMapping("/entries")
-    public void addEntry(@RequestBody Entry entry) {
-        entryService.addEntry(entry);
+    @PostMapping()
+    public ResponseEntity<?> addEntry(@RequestBody Entry entry) {
+        Entry newEntry = entryService.addEntry(entry);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{entryId}")
+                .buildAndExpand(newEntry.getId().toString())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
+
+    @DeleteMapping("{id}")
+    public void deleteEntry(@PathVariable String id) {
+        entryService.deleteEntry(id);
+    }
+
+/*    @PutMapping("{id}")
+    public ResponseEntity<?> updateEntry(@RequestBody Entry entry, @PathVariable String id) {
+
+    }*/
 }
