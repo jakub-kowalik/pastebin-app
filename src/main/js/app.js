@@ -13,7 +13,7 @@ class App extends React.Component {
 
     componentDidMount() {
         client({method: 'GET', path: '/api/entries'}).done(response => {
-            this.setState({entries: response.entity._embedded.entries});
+            this.setState({entries: response.entity});
         });
     }
 
@@ -24,10 +24,10 @@ class App extends React.Component {
     }
 }
 
-class EntriesList extends React.Component{
+class EntriesList extends React.Component {
     render() {
         const entries = this.props.employees.map(entry =>
-            <Entry key={entry._links.self.href} entry={entry}/>
+            <Entry key={entry.id} entry={entry}/>
         );
         return (
             <table>
@@ -39,23 +39,37 @@ class EntriesList extends React.Component{
     }
 }
 
-class Entry extends React.Component{
+class Entry extends React.Component {
     render() {
         return (
-            <div>
-            <tr>
-                <td>{this.props.entry.localDateTime}</td>
+            <div class="entry">
+                <table>
+                    <thead>
+                    <tr valign="top">
+                        <th>
+                            {this.props.entry.localDateTime}
+                        </th>
+                    </tr>
+                    <tr>
 
-            </tr>
-            <tr>
-                <td>{this.props.entry.entryCode}</td>
-            </tr>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <hr></hr>
+                            {this.props.entry.entryCode}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         )
     }
 }
 
 ReactDOM.render(
-    <App />,
+    <App/>
+    ,
     document.getElementById('react')
 )
