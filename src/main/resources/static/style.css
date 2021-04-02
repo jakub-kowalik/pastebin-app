@@ -19,7 +19,7 @@ body {
 }
 
 .navbar {
-    font-size: 1vw;
+    font-size: 24px;
     text-align: center;
     width: calc(1.6180339887498948482 * 100% - 100%);
     margin: auto;
@@ -42,9 +42,9 @@ body {
 .entry {
     display: flex;
     flex-wrap: wrap;
-    word-wrap: break-word;
-    margin: 1% auto;
-    padding: 2%;
+    overflow-wrap: break-word;
+    margin: 5px auto;
+    padding: 10px;
     background-color: #ecf0f1;
     border-radius: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
