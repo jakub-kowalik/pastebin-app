@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface EntryRepository extends PagingAndSortingRepository<Entry, String> {
 
     List<Entry> findAllByOrderByLocalDateTimeDesc(Pageable pageable);
+
+    Page<Entry> findAll(Pageable pageable);
 }
