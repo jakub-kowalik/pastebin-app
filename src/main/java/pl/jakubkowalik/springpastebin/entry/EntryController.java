@@ -7,19 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.jakubkowalik.springpastebin.entry.exception.EntryNotFoundException;
+import pl.jakubkowalik.springpastebin.entry.exception.EntryWrongPasswordException;
 import pl.jakubkowalik.springpastebin.entry.request.EntryModifyRequest;
 import pl.jakubkowalik.springpastebin.entry.request.EntryRequest;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -90,6 +88,8 @@ public class EntryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (EntryNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (EntryWrongPasswordException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -103,6 +103,8 @@ public class EntryController {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EntryWrongPasswordException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }

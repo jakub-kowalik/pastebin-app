@@ -3,20 +3,17 @@ package pl.jakubkowalik.springpastebin.entry;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.jakubkowalik.springpastebin.entry.exception.EntryNotFoundException;
+import pl.jakubkowalik.springpastebin.entry.exception.EntryWrongPasswordException;
 import pl.jakubkowalik.springpastebin.entry.request.EntryModifyRequest;
 import pl.jakubkowalik.springpastebin.entry.request.EntryRequest;
 
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -46,9 +43,13 @@ public class EntryService {
     public Entry updateEntry(EntryRequest entry, String id) {
         Entry oldEntry = entryRepository.findById(id).orElseThrow(EntryNotFoundException::new);
 
-        oldEntry.setLocalDateTime(LocalDateTime.now());
-        oldEntry.setEntryCode(entry.getEntryCode());
-        oldEntry.setPassword(entry.getPassword());
+        if (oldEntry.getPassword().equals(entry.getPassword())) {
+            oldEntry.setLocalDateTime(LocalDateTime.now());
+            oldEntry.setEntryCode(entry.getEntryCode());
+            if (entry.getNewPassword() != null)
+                oldEntry.setPassword(entry.getNewPassword());
+        } else
+            throw new EntryWrongPasswordException();
 
         return entryRepository.save(oldEntry);
     }
@@ -57,11 +58,18 @@ public class EntryService {
     public Entry modifyRegion(String id, EntryModifyRequest entryModifyRequest) throws JsonMappingException {
         Entry entry = entryRepository.findById(id).orElseThrow(EntryNotFoundException::new);
 
-        if (entryModifyRequest.getEntryCode().isPresent())
-            if (entryModifyRequest.getEntryCode().get() != null) {
-                entry.setEntryCode(entryModifyRequest.getEntryCode().get());
-                entry.setLocalDateTime(LocalDateTime.now());
-            }
+        if (entryModifyRequest.getPassword().isPresent())
+            if (entry.getPassword().equals(entryModifyRequest.getPassword().get())) {
+                if (entryModifyRequest.getEntryCode().isPresent())
+                    if (entryModifyRequest.getEntryCode().get() != null) {
+                        entry.setEntryCode(entryModifyRequest.getEntryCode().get());
+                        entry.setLocalDateTime(LocalDateTime.now());
+                    }
+                if (entryModifyRequest.getNewPassword().isPresent())
+                    if (entryModifyRequest.getNewPassword().get() != null)
+                        entry.setPassword(entryModifyRequest.getNewPassword().get());
+            } else
+                throw new EntryWrongPasswordException();
 
         return entryRepository.save(entry);
     }
