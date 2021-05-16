@@ -1,19 +1,22 @@
 package pl.jakubkowalik.springpastebin.entry;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import pl.jakubkowalik.springpastebin.entry.exception.EntryNotFoundException;
 import pl.jakubkowalik.springpastebin.entry.exception.EntryWrongPasswordException;
 import pl.jakubkowalik.springpastebin.entry.request.EntryModifyRequest;
-import pl.jakubkowalik.springpastebin.entry.request.EntryRequest;
-
+import pl.jakubkowalik.springpastebin.entry.request.EntryAddRequest;
+import pl.jakubkowalik.springpastebin.entry.request.EntryResponse;
+import pl.jakubkowalik.springpastebin.entry.request.EntryUpdateRequest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,17 +24,18 @@ public class EntryService {
 
     private final EntryRepository entryRepository;
 
-    public Page<Entry> getEntriesPage(Pageable pageable) {
-        return entryRepository.findAll(pageable);
+    public Page<EntryResponse> getEntriesPage(Pageable pageable) {
+        return entryRepository.findAll(pageable).map(EntryFactory::entityToResponse);
     }
 
-    public Optional<Entry> getEntry(String id) {
-        return entryRepository.findById(id);
+    public EntryResponse getEntry(String id) {
+        Entry entry = entryRepository.findById(id).orElseThrow(EntryNotFoundException::new);
+        return EntryFactory.entityToResponse(entry);
     }
 
     @Transactional
-    public Entry addEntry(EntryRequest entry) {
-        return entryRepository.save(EntryFactory.dtoToEntity(entry));
+    public EntryResponse addEntry(EntryAddRequest entry) {
+        return EntryFactory.entityToResponse(entryRepository.save(EntryFactory.requestToEntity(entry)));
     }
 
     @Transactional
@@ -40,7 +44,7 @@ public class EntryService {
     }
 
     @Transactional
-    public Entry updateEntry(EntryRequest entry, String id) {
+    public Entry updateEntry(EntryUpdateRequest entry, String id) {
         Entry oldEntry = entryRepository.findById(id).orElseThrow(EntryNotFoundException::new);
 
         if (oldEntry.getPassword().equals(entry.getPassword())) {
@@ -55,7 +59,7 @@ public class EntryService {
     }
 
     @Transactional
-    public Entry modifyRegion(String id, EntryModifyRequest entryModifyRequest) throws JsonMappingException {
+    public Entry modifyEntry(String id, EntryModifyRequest entryModifyRequest) throws JsonMappingException {
         Entry entry = entryRepository.findById(id).orElseThrow(EntryNotFoundException::new);
 
         if (entryModifyRequest.getPassword().isPresent())

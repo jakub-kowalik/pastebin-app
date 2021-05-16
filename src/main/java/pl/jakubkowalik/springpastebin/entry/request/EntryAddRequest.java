@@ -8,10 +8,9 @@ import javax.validation.constraints.Size;
 
 @Data
 @Builder
-public class EntryRequest {
+public class EntryAddRequest {
     @NotNull
     @Size(min = 1)
     private String entryCode;
     private String password;
-    private String newPassword;
 }

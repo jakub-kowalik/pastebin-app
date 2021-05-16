@@ -1,7 +1,9 @@
 package pl.jakubkowalik.springpastebin.entry;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,14 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import pl.jakubkowalik.springpastebin.entry.exception.EntryNotFoundException;
 import pl.jakubkowalik.springpastebin.entry.exception.EntryWrongPasswordException;
 import pl.jakubkowalik.springpastebin.entry.request.EntryModifyRequest;
-import pl.jakubkowalik.springpastebin.entry.request.EntryRequest;
+import pl.jakubkowalik.springpastebin.entry.request.EntryAddRequest;
+import pl.jakubkowalik.springpastebin.entry.request.EntryResponse;
+import pl.jakubkowalik.springpastebin.entry.request.EntryUpdateRequest;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +32,7 @@ public class EntryController {
     private final EntryService entryService;
 
     @GetMapping
-    public Page<Entry> getRegionsPage(
+    public Page<EntryResponse> getRegionsPage(
             @PageableDefault(size = 5)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "localDateTime", direction = Sort.Direction.DESC)
@@ -38,11 +42,10 @@ public class EntryController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Entry> getEntry(@PathVariable String id) {
+    public ResponseEntity<EntryResponse> getEntry(@PathVariable String id) {
         try {
-            Optional<Entry> entryEntity = entryService.getEntry(id);
-            return entryEntity.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            EntryResponse entryEntity = entryService.getEntry(id);
+            return new ResponseEntity<>(entryEntity, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (EntryNotFoundException e) {
@@ -51,9 +54,9 @@ public class EntryController {
     }
 
     @PostMapping()
-    public ResponseEntity<Entry> addEntry(@Valid @RequestBody EntryRequest entry) {
+    public ResponseEntity<EntryResponse> addEntry(@Valid @RequestBody EntryAddRequest entry) {
         try {
-            Entry newEntry = entryService.addEntry(entry);
+            EntryResponse newEntry = entryService.addEntry(entry);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -81,7 +84,7 @@ public class EntryController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Entry> updateEntry(@Valid @RequestBody EntryRequest entry, @PathVariable String id) {
+    public ResponseEntity<Entry> updateEntry(@Valid @RequestBody EntryUpdateRequest entry, @PathVariable String id) {
         try {
             return new ResponseEntity<>(entryService.updateEntry(entry, id), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
@@ -96,7 +99,7 @@ public class EntryController {
     @PatchMapping("{id}")
     public ResponseEntity<Entry> modifyEntry(@PathVariable String id, @Valid @RequestBody EntryModifyRequest entryModifyRequest) {
         try {
-            return new ResponseEntity<>(entryService.modifyRegion(id, entryModifyRequest), HttpStatus.OK);
+            return new ResponseEntity<>(entryService.modifyEntry(id, entryModifyRequest), HttpStatus.OK);
         } catch (EntryNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (JsonMappingException e) {
