@@ -21,6 +21,10 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew bootJar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: build/libs
       - name: "Build & test"
         run: |
           echo "done!"
@@ -30,6 +34,5 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           automatic_release_tag: "latest"
-          run: ./gradlew bootJar
           files: |
             *.jar
