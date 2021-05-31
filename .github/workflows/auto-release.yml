@@ -6,7 +6,6 @@ on:
       - master
 
 jobs:
-  if: ${{ startsWith(github.ref, 'refs/tags/v*') }}
   tagged-release:
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
