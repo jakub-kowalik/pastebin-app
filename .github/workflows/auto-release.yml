@@ -1,6 +1,9 @@
 name: "auto-release."
 
 on:
+  create:
+    tags:
+      - v*
   push:
     tags:
       - v*
