@@ -25,3 +25,5 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: GitHub Releases
+      uses: fnkr/github-action-ghr@v1.3
