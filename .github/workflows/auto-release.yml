@@ -3,6 +3,8 @@ name: "auto-release."
 on:
   push:
     branches: [ master ]
+    tags:
+      - "v*"
     
 jobs:
   tagged-release:
