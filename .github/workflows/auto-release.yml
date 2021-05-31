@@ -21,12 +21,6 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew bootJar
-      - uses: actions/upload-artifact@v2
-        with:
-            path: build/libs
-      - name: "Build & test"
-        run: |
-          echo "done!"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
