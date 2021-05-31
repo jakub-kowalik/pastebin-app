@@ -19,6 +19,6 @@ public class SwaggerConfiguration {
                 .select()
                 .paths(PathSelectors.ant("/api/**"))
                 .apis(RequestHandlerSelectors.basePackage("pl.jakubkowalik.springpastebin"))
-                .build()
+                .build();
     }
 }
