@@ -32,4 +32,4 @@ jobs:
           automatic_release_tag: "latest"
           files: |
             LICENSE.txt
-            *.jar
+            /build/libs/*.jar
