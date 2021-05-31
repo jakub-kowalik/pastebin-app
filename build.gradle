@@ -36,3 +36,9 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'pl.jakubkowalik.springpastebin.SpringPastebinApplication.java'
+    }
+}
