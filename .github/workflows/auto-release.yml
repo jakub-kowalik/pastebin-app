@@ -23,8 +23,7 @@ jobs:
         run: ./gradlew bootJar
       - uses: actions/upload-artifact@v2
         with:
-          name: Package
-          path: build/libs
+            path: build/libs
       - name: "Build & test"
         run: |
           echo "done!"
