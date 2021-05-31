@@ -17,7 +17,7 @@ public class SwaggerConfiguration {
     public Docket get() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(PathSelectors.ant("/api/**"));
+                .paths(PathSelectors.ant("/api/**"))
                 .apis(RequestHandlerSelectors.basePackage("pl.jakubkowalik.springpastebin"))
                 .build();
     }
