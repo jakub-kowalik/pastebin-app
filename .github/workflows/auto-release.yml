@@ -2,8 +2,8 @@ name: "auto-release."
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - master
 
 jobs:
   tagged-release:
