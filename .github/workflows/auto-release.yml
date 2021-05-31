@@ -2,10 +2,11 @@ name: "auto-release."
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
     tags:
-      - "v*"
-    
+      - v*
+
 jobs:
   tagged-release:
     name: "Tagged Release"
