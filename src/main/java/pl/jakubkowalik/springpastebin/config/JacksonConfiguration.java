@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 @Configuration
 public class JacksonConfiguration {
+
     private final ObjectMapper objectMapper;
 
     public JacksonConfiguration(ObjectMapper objectMapper) {
