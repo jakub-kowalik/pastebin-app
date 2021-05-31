@@ -2,7 +2,8 @@ name: "auto-release."
 
 on:
   push:
-    - master
+    branches:
+      - master
 
 jobs:
   if: ${{ startsWith(github.ref, 'refs/tags/v*') }}
